@@ -2,13 +2,15 @@ package com.dezdeqness.survey.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dezdeqness.survey.core.event.BaseEvent
+import com.dezdeqness.survey.core.event.EventConsumer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 abstract class BaseViewModel(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), CoroutineScope, EventConsumer<BaseEvent> {
 
     override val coroutineContext: CoroutineContext
         get() = viewModelScope.coroutineContext
