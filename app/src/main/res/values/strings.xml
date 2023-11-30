@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Survey App</string>
+    <string name="welcome_start_survey">Start survey</string>
 </resources>
