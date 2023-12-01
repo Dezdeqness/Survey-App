@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Survey App</string>
     <string name="welcome_start_survey">Start survey</string>
+    <string name="survey_prev_label">Prev</string>
+    <string name="survey_next_label">Next</string>
+    <string name="survey_status">Question %d/%d</string>
+    <string name="survey_submitted_status">Questions submitted: %d</string>
+    <string name="survey_error_retry_label">Retry</string>
+    <string name="survey_error_label">Retry</string>
+    <string name="survey_notification_success_label">Success</string>
+    <string name="survey_input_hint">Type here for an answer</string>
+    <string name="survey_notification_error_label">Failure!</string>
+    <string name="survey_notification_retry_label">Retry</string>
+    <string name="survey_submit_label">Submit</string>
+    <string name="survey_already_submitted_label">Already Submitted</string>
 </resources>
