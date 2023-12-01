@@ -24,8 +24,8 @@ class WelcomeViewModel @Inject constructor(
     }
 
     override fun onEventConsumed(event: BaseEvent) {
-
         val value = _welcomeState.value
+
         _welcomeState.value = value.copy(
             events = value.events.toMutableList() - event
         )

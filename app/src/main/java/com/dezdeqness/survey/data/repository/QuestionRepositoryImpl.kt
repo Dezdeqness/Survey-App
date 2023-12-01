@@ -13,7 +13,7 @@ class QuestionRepositoryImpl(
     override fun getQuestions() =
         questionsRemoteDatasource
             .getQuestions()
-            .map { list ->
+            .mapCatching { list ->
                 list.map(questionMapper::fromResponse)
             }
 

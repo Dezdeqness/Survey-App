@@ -15,13 +15,14 @@ abstract class BaseViewModel(
     override val coroutineContext: CoroutineContext
         get() = viewModelScope.coroutineContext
 
+    override fun onEventConsumed(event: BaseEvent) {}
 
-    fun launchOnIo(lambda: suspend () -> Unit) =
+    protected fun launchOnIo(lambda: suspend () -> Unit) =
         launch(coroutineDispatcherProvider.io()) {
             lambda.invoke()
         }
 
-    fun launchOnMain(lambda: suspend () -> Unit) =
+    protected fun launchOnMain(lambda: suspend () -> Unit) =
         launch(coroutineDispatcherProvider.main()) {
             lambda.invoke()
         }

@@ -26,7 +26,7 @@ fun SurveyApp(
             WelcomePage(navController = navController)
         }
         composable(SURVEY_ROUTE) {
-            SurveyPage()
+            SurveyPage(navController = navController)
         }
     }
 }
