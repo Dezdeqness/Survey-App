@@ -6,9 +6,11 @@ import javax.inject.Inject
 
 class QuestionUiMapper @Inject constructor() {
 
-    fun fromEntity(value: QuestionEntity) =
-        QuestionUiModel(
-            id = value.id,
-            question = value.question,
-        )
+    fun mapListEntities(list: List<QuestionEntity>) =
+        list.map { value ->
+            QuestionUiModel(
+                id = value.id,
+                question = value.question,
+            )
+        }
 }

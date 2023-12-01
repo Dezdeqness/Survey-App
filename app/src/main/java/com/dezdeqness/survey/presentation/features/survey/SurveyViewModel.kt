@@ -2,6 +2,7 @@ package com.dezdeqness.survey.presentation.features.survey
 
 import com.dezdeqness.survey.core.BaseViewModel
 import com.dezdeqness.survey.core.CoroutineDispatcherProvider
+import com.dezdeqness.survey.core.TimeProvider
 import com.dezdeqness.survey.domain.repository.QuestionRepository
 import com.dezdeqness.survey.presentation.features.survey.mapper.QuestionUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class SurveyViewModel @Inject constructor(
     private val questionRepository: QuestionRepository,
     private val questionUiMapper: QuestionUiMapper,
+    private val timeProvider: TimeProvider,
     coroutineDispatcherProvider: CoroutineDispatcherProvider,
 ) : BaseViewModel(coroutineDispatcherProvider = coroutineDispatcherProvider) {
 
@@ -35,7 +37,30 @@ class SurveyViewModel @Inject constructor(
         timeoutJob?.cancel()
     }
 
-    fun onNextButtonClicked() {
+    fun dispatch(surveyAction: SurveyAction) {
+        when(surveyAction) {
+            SurveyAction.OnRetryClicked -> {
+                onRetryClicked()
+            }
+            SurveyAction.OnNextClicked -> {
+                onNextButtonClicked()
+            }
+            SurveyAction.OnPrevClicked -> {
+                onPrevButtonClicked()
+            }
+            is SurveyAction.OnAnswerChanged -> {
+                onAnswerTextChanged(surveyAction.text)
+            }
+            SurveyAction.OnNotificationShown -> {
+                setupAnswerStatusTimeout()
+            }
+            SurveyAction.OnSubmitAnswerCLicked -> {
+                onSubmittedButtonClicked()
+            }
+        }
+    }
+
+    private fun onNextButtonClicked() {
         val currentQuestionIndex = _surveyState.value.currentQuestionIndex
         val questionsLength = _surveyState.value.questions.size
 
@@ -54,7 +79,7 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-    fun onPrevButtonClicked() {
+    private fun onPrevButtonClicked() {
         val currentQuestionIndex = _surveyState.value.currentQuestionIndex
 
         if (currentQuestionIndex == 0) return
@@ -74,7 +99,7 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-    fun onSubmittedButtonClicked() {
+    private fun onSubmittedButtonClicked() {
         _surveyState.update {
             _surveyState.value.copy(currentAnswerStatus = AnswerStatus.None)
         }
@@ -116,7 +141,7 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-    fun onAnswerTextChanged(value: String) {
+    private fun onAnswerTextChanged(value: String) {
         val currentIndex = _surveyState.value.currentQuestionIndex
 
         val questions = _surveyState.value.questions.mapIndexed { index, questionUiModel ->
@@ -134,16 +159,16 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-    fun onRetryClicked() {
+    private fun onRetryClicked() {
         fetchQuestions()
     }
 
-    fun setupAnswerStatusTimeout() {
+    private fun setupAnswerStatusTimeout() {
         timeoutJob?.cancel()
 
         timeoutJob = launchOnIo {
 
-            delay(TIMEOUT_MILLIS)
+            delay(timeProvider.getTimeoutMills())
             if (_surveyState.value.currentAnswerStatus == AnswerStatus.None) return@launchOnIo
 
             val currentIndex = _surveyState.value.currentQuestionIndex
@@ -172,7 +197,7 @@ class SurveyViewModel @Inject constructor(
             questionRepository
                 .getQuestions()
                 .onSuccess { list ->
-                    val uiQuestions = list.map(questionUiMapper::fromEntity)
+                    val uiQuestions = questionUiMapper.mapListEntities(list)
 
                     _surveyState.update {
                         _surveyState.value.copy(
@@ -180,7 +205,7 @@ class SurveyViewModel @Inject constructor(
                             currentQuestionIndex = INITIAL_QUESTION_INDEX,
                             isLoading = false,
                             isPrevActionEnabled = false,
-                            isNextActionEnabled = uiQuestions.isNotEmpty(),
+                            isNextActionEnabled = uiQuestions.isNotEmpty() && uiQuestions.size > 1,
                         )
                     }
                 }
@@ -200,7 +225,6 @@ class SurveyViewModel @Inject constructor(
     companion object {
         private const val INITIAL_QUESTION_INDEX = 0
         private const val SUCCESS_CODE = 200
-        private const val TIMEOUT_MILLIS = 3000L
     }
 
 }

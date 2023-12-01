@@ -42,10 +42,10 @@ fun SurveyPage(
                 state = state.value,
                 navController = navController,
                 onPrevClicked = {
-                    surveyViewModel.onPrevButtonClicked()
+                    surveyViewModel.dispatch(SurveyAction.OnPrevClicked)
                 },
                 onNextClicked = {
-                    surveyViewModel.onNextButtonClicked()
+                    surveyViewModel.dispatch(SurveyAction.OnNextClicked)
                 }
             )
         },
@@ -65,7 +65,7 @@ fun SurveyPage(
                 state.value.isError -> {
                     ErrorContent(
                         onRetryClicked = {
-                            surveyViewModel.onRetryClicked()
+                            surveyViewModel.dispatch(SurveyAction.OnRetryClicked)
                         },
                         modifier = Modifier.align(Alignment.Center),
                     )
@@ -108,11 +108,11 @@ fun SurveyPage(
                             ControlPanel(
                                 state = state.value,
                                 onAnswerTextChanger = { text ->
-                                    surveyViewModel.onAnswerTextChanged(text)
+                                    surveyViewModel.dispatch(SurveyAction.OnAnswerChanged(text))
 
                                 },
                                 onSubmittedButtonClicked = {
-                                    surveyViewModel.onSubmittedButtonClicked()
+                                    surveyViewModel.dispatch(SurveyAction.OnSubmitAnswerCLicked)
                                 }
 
                             )
@@ -125,14 +125,17 @@ fun SurveyPage(
 
                             LaunchedEffect(currentAnswerStatus) {
                                 if (currentAnswerStatus != AnswerStatus.None) {
-                                    surveyViewModel.setupAnswerStatusTimeout()
+                                    surveyViewModel.dispatch(SurveyAction.OnNotificationShown)
                                 }
                             }
 
                             if (state.value.currentAnswerStatus == AnswerStatus.None) return@AnimatedVisibility
-                            NotificationSurface(state = state.value) {
-                                surveyViewModel.onSubmittedButtonClicked()
-                            }
+                            NotificationSurface(
+                                state = state.value,
+                                onRetryButtonClicked = {
+                                    surveyViewModel.dispatch(SurveyAction.OnSubmitAnswerCLicked)
+                                },
+                            )
                         }
                     }
 

@@ -2,6 +2,7 @@ package com.dezdeqness.survey.di.modules
 
 import com.dezdeqness.survey.core.CoroutineDispatcherProvider
 import com.dezdeqness.survey.core.CoroutineDispatcherProviderImpl
+import com.dezdeqness.survey.core.TimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +17,9 @@ class AppModule {
     @Singleton
     fun provideCoroutinesDispatcher(): CoroutineDispatcherProvider =
         CoroutineDispatcherProviderImpl()
+
+    @Provides
+    @Singleton
+    fun provideTimeProvides() = TimeProvider()
 
 }
