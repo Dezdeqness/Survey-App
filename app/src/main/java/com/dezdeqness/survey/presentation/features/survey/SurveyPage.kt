@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dezdeqness.survey.presentation.features.survey.components.ControlPanel
+import com.dezdeqness.survey.presentation.features.survey.components.EmptyContent
 import com.dezdeqness.survey.presentation.features.survey.components.ErrorContent
 import com.dezdeqness.survey.presentation.features.survey.components.NotificationSurface
 import com.dezdeqness.survey.presentation.features.survey.components.SubmittedCounter
@@ -67,6 +68,12 @@ fun SurveyPage(
                             surveyViewModel.onRetryClicked()
                         },
                         modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+
+                state.value.questions.isEmpty() -> {
+                    EmptyContent(
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
 

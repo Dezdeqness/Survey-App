@@ -10,7 +10,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,7 +59,7 @@ class SurveyViewModel @Inject constructor(
 
         if (currentQuestionIndex == 0) return
 
-        val newQuestionIndex = currentQuestionIndex - 1;
+        val newQuestionIndex = currentQuestionIndex - 1
 
         val questionsLength = _surveyState.value.questions.size
 
@@ -181,7 +180,7 @@ class SurveyViewModel @Inject constructor(
                             currentQuestionIndex = INITIAL_QUESTION_INDEX,
                             isLoading = false,
                             isPrevActionEnabled = false,
-                            isNextActionEnabled = true,
+                            isNextActionEnabled = uiQuestions.isNotEmpty(),
                         )
                     }
                 }

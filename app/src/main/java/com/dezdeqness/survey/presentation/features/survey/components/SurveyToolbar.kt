@@ -40,7 +40,7 @@ fun SurveyToolbar(
     val isNextEnabled = state.isNextActionEnabled
 
     val isStatusInvisible = remember(state.isLoading, state.isError) {
-        state.isLoading || state.isError
+        state.isLoading || state.isError || state.questions.isEmpty()
     }
 
     TopAppBar(
@@ -231,6 +231,28 @@ fun SurveyToolbarPreviewError() {
             isPrevActionEnabled = false,
             currentQuestionIndex = 0,
             isError = true,
+        )
+
+
+    SurveyToolbar(
+        state = state,
+        navController = navController,
+        onPrevClicked = { },
+        onNextClicked = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SurveyToolbarPreviewNoItems() {
+    val navController = rememberNavController()
+
+    val state =
+        SurveyState(
+            isNextActionEnabled = false,
+            isPrevActionEnabled = false,
+            currentQuestionIndex = 0,
+            questions = listOf()
         )
 
 

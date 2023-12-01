@@ -14,7 +14,7 @@ class QuestionRepositoryImpl(
         questionsRemoteDatasource
             .getQuestions()
             .mapCatching { list ->
-                list.map(questionMapper::fromResponse)
+                list.mapNotNull(questionMapper::fromResponse)
             }
 
     override fun submitAnswer(id: Int, answer: String) =

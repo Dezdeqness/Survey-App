@@ -6,10 +6,11 @@ import javax.inject.Inject
 
 class QuestionMapper @Inject constructor() {
 
-    fun fromResponse(item: QuestionRemote) =
-        QuestionEntity(
-            id = item.id,
-            question = item.question,
+    fun fromResponse(item: QuestionRemote): QuestionEntity? {
+        return QuestionEntity(
+            id = item.id ?: return null,
+            question = item.question ?: return null,
         )
+    }
 
 }
