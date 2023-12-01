@@ -21,7 +21,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "BASE_API_URL", "\": https://xm-assignment.web.app/\"")
+        buildConfigField("String", "BASE_API_URL", "\"https://xm-assignment.web.app/\"")
     }
 
     buildTypes {
